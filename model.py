@@ -5,6 +5,7 @@ from langchain.vectorstores import FAISS
 from langchain.llms import CTransformers
 from langchain.chains import RetrievalQA
 import chainlit as cl
+from huggingface_hub import hf_hub_download
 
 DB_FAISS_PATH = 'vectorstore/db_faiss'
 
@@ -39,8 +40,17 @@ def retrieval_qa_chain(llm, prompt, db):
 #Loading the model
 def load_llm():
     # Load the locally downloaded model here
+    '''
     llm = CTransformers(
         model = "llama-2-7b-chat.ggmlv3.q8_0.bin",
+        model_type="llama",
+        max_new_tokens = 512,
+        temperature = 0.5
+    )
+    '''
+    model_path = hf_hub_download(repo_id="TheBloke/Llama-2-7B-Chat-GGML", filename="llama-2-7b-chat.ggmlv3.q8_0.bin")
+    llm = CTransformers(
+        model = model_path,
         model_type="llama",
         max_new_tokens = 512,
         temperature = 0.5
